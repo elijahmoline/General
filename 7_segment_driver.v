@@ -1,4 +1,3 @@
-
   // This is a possible way to organize the modules for Lab 6.  
 // Reminder, the idea is that your design will need to take in 
 // 2x 4bit numbers, add them together, and then display the 
@@ -56,12 +55,12 @@ endmodule
 module fulladder(
     input a,
     input b, 
-    input c_in,
-    output c_out,
+    input cr_in,
+    output cr_out,
     output sum
     );
-    assign c_out = (a & b) | (a & c_in) | (b & c_in);
-    assign sum = (~a & ~b & c) | (~a & b & ~c) | (a & b & c) | (a & ~b & ~c);
+    assign c_out = (a & b) | (a & cr_in) | (b & cr_in);
+    assign sum = (~a & ~b & cr_in) | (~a & b & ~cr_in) | (a & b & cr_in) | (a & ~b & ~cr_in);
 endmodule
 
 // you need to create the code that drives this.  I suggest you check the class example 
@@ -73,6 +72,7 @@ endmodule
 // = c_out  s3  s2  s1  s0
 //
 module add_4_bits(
+    
     input a3,
     input a2,
     input a1,
@@ -87,6 +87,12 @@ module add_4_bits(
     output s2,
     output s1,
     output s0);
+    wire c_in0,c_in1,c_in2 ;
+    
+    fulladder add0(a0,b0,0,c_in0,s0);
+    fulladder add1(a1,b1,c_in0,c_in1,s1);
+    fulladder add2(a2,b2,c_in1,c_in2,s2);
+    fulladder add3(a3,b3,c_in2,c_out,s3);
 
 endmodule
     
@@ -108,12 +114,12 @@ module generate_7seg_bits(
     output df,
     output dg);
 
-  assign da = s2 | s0 | s1 & s3 | ~s1 & ~s2 & ~s3;
-  assign db = ~s1 | ~s2 & ~s3 | s2 & s3;
-  assign dc = s1 | ~s2 | s3;
-  assign dd = s2 & ~s3 | s0 & ~s3 | ~s1 & ~s3 | s1 & ~s2 & s3;
-  assign de = ~s1 & ~s3 | s0 & ~s3 | s2 & ~s3;
-  assign df = s0 | ~s2 & ~s3 | s1 & ~s2 | s1 & ~s3; 
-  assign dg = s0 | s2 & ~s3 | ~s1 & s2 | s1 & ~s2;
+  assign da = ~(s2 | s0 | s1 & s3 | ~s1 & ~s2 & ~s3);
+  assign db = ~(~s1 | ~s2 & ~s3 | s2 & s3);
+  assign dc = ~(s1 | ~s2 | s3);
+  assign dd = ~(s2 & ~s3 | s0 & ~s3 | ~s1 & ~s3 | s1 & ~s2 & s3 | ~s1 & s2);
+  assign de = ~(~s1 & ~s3 | s0 & ~s3 | s2 & ~s3);
+  assign df = ~(s0 | ~s2 & ~s3 | s1 & ~s2 | s1 & ~s3); 
+  assign dg = ~(s0 | s2 & ~s3 | ~s1 & s2 | s1 & ~s2);
   
 endmodule
