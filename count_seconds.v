@@ -2,7 +2,7 @@ module display_seconds(
   input CLK100MHZ,
   output [7:0]LED
 );
-  clk_1Hz(CLK100MHZ,CLK_1Hz);
+  clk_1Hz gate2(CLK100MHZ,CLK_1Hz);
   count_ticks gate1(CLK_1Hz, sum[7:0]);
   assign LED[7:0] = sum[7:0];
 endmodule
